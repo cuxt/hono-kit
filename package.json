@@ -1,5 +1,10 @@
 {
   "name": "hono-kit",
+  "version": "0.0.1",
+  "author": {
+    "name": "binxin",
+    "email": "admin@xbxin.com"
+  },
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
