@@ -3,31 +3,6 @@ import { Context, Next } from 'hono';
 import { formatDate } from '../utils/date';
 import packageInfo from '../../package.json'
 
-export const metaMiddleware = async (c: Context, next: Next) => {
-  await next();
-
-  // 获取当前的响应对象
-  const res = c.res;
-
-  if (res && res.headers.get('content-type')?.includes('application/json')) {
-    // 尝试解析 JSON 响应
-    const body = await res.json();
-
-    // 处理响应数据，确保 body 是对象
-    const enhancedBody = {
-      timestamp: formatDate(new Date()),
-      version: packageInfo.version,
-      ...(body ?? {}),  // 使用空对象替代可能的 null 或 undefined
-    };
-
-    // 重新构建响应并返回
-    c.res = new Response(JSON.stringify(enhancedBody), {
-      status: res.status,
-      headers: res.headers,
-    });
-  }
-};
-
 // 定义通用的响应接口
 interface ApiResponse<T = any> {
   status: 'success' | 'fail';

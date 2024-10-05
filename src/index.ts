@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors';
 import { router } from './routes/index';
 import { responseMiddleware } from './middleware/meta'
 
@@ -24,6 +25,8 @@ app.onError((err, c) => {
   console.error(err)
   return c.json({ error: `An unexpected error occurred: ${err.message}` }, 500)
 })
+
+app.use('/*', cors());
 
 // 启动应用
 export default app;
