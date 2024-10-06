@@ -46,6 +46,6 @@ auth.get('/info', async (c) => {
   } catch (error: any) {
     return c.json({ error: error.message }, 500);
   }
-})
+});
 
-export { auth }
+export { auth };
