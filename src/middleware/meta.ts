@@ -1,7 +1,7 @@
 // middleware/meta.ts
 import { Context, Next } from 'hono';
 import { formatDate } from '../utils/date';
-import packageInfo from '../../package.json'
+import packageInfo from '../../package.json';
 
 // 定义通用的响应接口
 interface ApiResponse<T = any> {
@@ -15,7 +15,6 @@ interface ApiResponse<T = any> {
   };
 }
 
-
 export const responseMiddleware = async (c: Context, next: Next) => {
   await next();
 
@@ -26,14 +25,14 @@ export const responseMiddleware = async (c: Context, next: Next) => {
   if (res && res.headers.get('content-type')?.includes('application/json')) {
     const body = await res.json();
 
-    const isError = statusCode >= 400;  // 判断是否为错误响应
+    const isError = statusCode >= 400; // 判断是否为错误响应
 
     // 如果没有错误，构建标准化的成功响应
     const formattedResponse: ApiResponse = {
       status: isError ? 'fail' : 'success', // 错误时设置为 fail
       data: body ?? null,
       timestamp: formatDate(new Date()),
-      version: packageInfo.version
+      version: packageInfo.version,
     };
 
     // 返回新的 JSON 响应
@@ -42,23 +41,7 @@ export const responseMiddleware = async (c: Context, next: Next) => {
       headers: res.headers,
     });
   } else {
-    // 处理非 JSON 响应或错误情况
-    const errorResponse: ApiResponse = {
-      status: 'fail',
-      data: null,
-      timestamp: formatDate(new Date()),
-      version: packageInfo.version,
-      error: {
-        code: 500,
-        details: 'Expected JSON response but received another format'
-      }
-    };
-
-    c.res = new Response(JSON.stringify(errorResponse), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
+    // 非 JSON 响应不做修改，原样返回
+    c.res = res;
   }
 };

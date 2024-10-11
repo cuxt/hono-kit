@@ -3,8 +3,7 @@
 import { Context } from "hono";
 
 // 注册
-async function register (c: Context) {
-  const { username, email, password } = await c.req.json();
+export async function register (c: Context, username: string, email: string, password: string) {
   const stmt = await c.env.DB.prepare(
     'INSERT INTO DEV_USERS (username, user_status, email, password, access_token, inviter_id) VALUES (?, ?, ?, ?, ?, ?)'
   );
@@ -31,8 +30,7 @@ async function register (c: Context) {
   }
 }
 
-async function login (c: Context) {
-  const { username, password } = await c.req.json();
+export async function login (c: Context, username: string, password: string) {
   const stmt = await c.env.DB.prepare('SELECT * FROM DEV_USERS WHERE username = ? AND password = ?');
 
   const result = await stmt.bind(username, password).first();
@@ -49,16 +47,10 @@ async function login (c: Context) {
   return result.access_token;
 }
 
-async function info (c: Context) {
-  const accessToken = c.req.header('Authorization')?.split(' ')[1];
-
-  if (!accessToken) {
-    throw new Error('Unauthorized');
-  }
-
+export async function info (c: Context, token: string) {
   const stmt = await c.env.DB.prepare('SELECT * FROM DEV_USERS WHERE access_token = ?');
 
-  const result = await stmt.bind(accessToken).first();
+  const result = await stmt.bind(token).first();
 
   if (!result) {
     throw new Error('User not found');
@@ -80,21 +72,61 @@ async function info (c: Context) {
   };
 }
 
-async function role (c: Context) {
-  const accessToken = c.req.header('Authorization')?.split(' ')[1];
-
-  if (!accessToken) {
-    return 4;
-  }
-
+export async function role (c: Context, token: string) {
   const stmt = await c.env.DB.prepare(`SELECT role FROM DEV_USERS WHERE access_token = ?`);
-  const result = await stmt.bind(accessToken).first();
+  const result = await stmt.bind(token).first();
 
   if (!result) {
-    return c.env.ROOT_TOKEN === accessToken ? 1 : 4;
+    return c.env.ROOT_TOKEN === token ? 1 : 4;
   }
 
   return result.role;
+}
+
+export async function changePassword (c: Context, token: string, oldPassword: string, newPassword: string) {
+  const stmt = c.env.DB.prepare('SELECT password FROM DEV_USERS WHERE access_token = ?');
+  try {
+    const result = await stmt.bind(token).first();
+    if (result && result.password === oldPassword) {
+      const updateStmt = c.env.DB.prepare('UPDATE DEV_USERS SET password = ? WHERE access_token = ?');
+      await updateStmt.bind(newPassword, token).run();
+      return;
+    } else {
+      throw new Error('Password or username is incorrect');
+    }
+  } catch (error: any) {
+    throw new Error('An unexpected error occurred: ' + error.message);
+  }
+}
+
+export async function users (c: Context, token: string) {
+  const userRole = await role(c, token);
+  if (userRole !== 1) {
+    throw new Error('Permission denied');
+  }
+
+  const stmt = await c.env.DB.prepare('SELECT * FROM DEV_USERS');
+
+  const result = await stmt.all();
+
+  return result.results;
+}
+
+export async function active (c: Context, token: string, id: number) {
+  const userRole = await role(c, token);
+  if (userRole !== 1 || id === 1) {
+    throw new Error('Permission denied');
+  }
+
+  const stmt = c.env.DB.prepare('UPDATE DEV_USERS SET user_status = CASE WHEN user_status = 1 THEN 0 ELSE 1 END WHERE id = ?');
+
+  try {
+    await stmt.bind(id).run();
+
+    return;
+  } catch (error: any) {
+    throw new Error('An unexpected error occurred: ' + error.message);
+  }
 }
 
 async function init (c: Context) {
@@ -127,5 +159,3 @@ async function init (c: Context) {
     console.error('Error initializing database:', err);
   }
 }
-
-export { register, login, info, role };
