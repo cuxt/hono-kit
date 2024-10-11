@@ -4,6 +4,7 @@ import { router } from './routes/index';
 import { responseMiddleware } from './middleware/meta'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
+app.use('*', cors());
 
 app.use('*', responseMiddleware);
 
@@ -25,8 +26,6 @@ app.onError((err, c) => {
   console.error(err)
   return c.json({ error: `An unexpected error occurred: ${err.message}` }, 500)
 })
-
-app.use('/*', cors());
 
 // 启动应用
 export default app;

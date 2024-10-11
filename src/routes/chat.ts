@@ -3,7 +3,7 @@ import { Context, Hono } from 'hono'
 
 const chat = new Hono()
 
-chat.get('/models', async (c) => {
+chat.post('/models', async (c) => {
   const { url, apikey } = await c.req.json();
   const newUrl = url.replace(/\/$/, '') + '/v1/models';
   const headers = {
