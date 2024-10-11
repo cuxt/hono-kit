@@ -5,7 +5,11 @@ import { bing } from './bing';
 import { chat } from './chat';
 import { cloudflare } from './cloudflare';
 import { github } from './github';
+import { kv } from './kv';
+import { llm } from './llm';
 import { msg } from './msg';
+import { ths } from './ths';
+import { tts } from './tts';
 
 const router = new Hono();
 
@@ -16,7 +20,11 @@ const routes = [
   { path: '/chat', handler: chat },
   { path: '/cloudflare', handler: cloudflare },
   { path: '/github', handler: github },
-  { path: '/msg', handler: msg }
+  { path: '/kv', handler: kv },
+  { path: '/llm', handler: llm },
+  { path: '/msg', handler: msg },
+  { path: '/ths', handler: ths },
+  { path: '/tts', handler: tts },
 ];
 
 routes.forEach(route => {

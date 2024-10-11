@@ -26,12 +26,9 @@ async function corp (c: Context, user: string) {
     from = await c.env[channel] || 'CORP_ADMIN';
   };
 
-  console.log(from);
   try {
     const data = await msgUtils.corp(from, title, desc, content);
-    console.log(data);
 
-    // return c.json(data);
     if (data.errcode === 0) {
       return c.json(data);
     } else {
