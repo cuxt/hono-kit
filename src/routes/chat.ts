@@ -1,5 +1,6 @@
 // routes/chat.ts
 import { Context, Hono } from 'hono'
+import { MODELS } from '../utils/models';
 
 const chat = new Hono()
 
@@ -37,6 +38,16 @@ chat.post('/models', async (c) => {
 
 chat.post('/cloudflare', async (c: Context) => {
   const { model, prompt, stream } = await c.req.json();
+
+  // 查询模型对应的类型
+  const type = MODELS.find(m => m.id === model)?.type;
+
+  if (type === 'embedding') {
+    const answer = await c.env.AI.run(model, {
+      text: prompt
+    });
+    return c.json(answer);
+  }
 
   const answer = await c.env.AI.run(model, {
     prompt: prompt,
