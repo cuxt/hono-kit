@@ -1,7 +1,8 @@
 // routes/cloudflare.ts
 import { Context, Hono } from "hono";
+import { authMiddleware } from "../middleware/auth";
 
-const cloudflare = new Hono();
+export const cloudflare = new Hono();
 
 cloudflare.post('/graphql', async (c: Context) => {
   const url = 'https://api.cloudflare.com/client/v4/graphql';
@@ -46,4 +47,6 @@ cloudflare.post('/graphql', async (c: Context) => {
   }
 })
 
-export { cloudflare }
+cloudflare.post('/vector/insert', authMiddleware, async (c: Context) => {
+  // 插入
+})

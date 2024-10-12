@@ -1,7 +1,7 @@
 // routes/bilibili.ts
 import { Context, Hono } from 'hono'
 
-const bilibili = new Hono()
+export const bilibili = new Hono()
 
 bilibili.post('/subtitle', async (c) => {
   try {
@@ -77,5 +77,3 @@ async function getSubtitleUrl (aid: string, cid: string, headers: any) {
   
   return 'https:' + data.data.subtitle.subtitles[0].subtitle_url;
 }
-
-export { bilibili }

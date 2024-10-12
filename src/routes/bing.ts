@@ -1,7 +1,7 @@
 // routes/bing.ts
 import { Hono } from 'hono';
 
-const bing = new Hono();
+export const bing = new Hono();
 
 bing.get('/img', async (c) => {
   return c.json(await dailyImg());
@@ -29,5 +29,3 @@ async function dailyImg () {
     title: data.images[0].title
   };
 }
-
-export { bing };

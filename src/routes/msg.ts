@@ -2,7 +2,7 @@
 import { Context, Hono } from "hono";
 import * as msgUtils from "../utils/msg";
 
-const msg = new Hono();
+export const msg = new Hono();
 
 msg.post('/:user/:channel', async (c) => {
   const { user, channel } = c.req.param();
@@ -40,5 +40,3 @@ async function corp (c: Context, user: string) {
     return c.json({ error: error.message }, 500);
   }
 };
-
-export { msg };

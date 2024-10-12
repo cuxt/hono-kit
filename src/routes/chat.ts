@@ -2,7 +2,7 @@
 import { Context, Hono } from 'hono'
 import { MODELS } from '../utils/models';
 
-const chat = new Hono()
+export const chat = new Hono()
 
 chat.post('/models', async (c) => {
   const { url, apikey } = await c.req.json();
@@ -58,5 +58,3 @@ chat.post('/cloudflare', async (c: Context) => {
     headers: { "content-type": "text/event-stream" }
   });
 })
-
-export { chat }

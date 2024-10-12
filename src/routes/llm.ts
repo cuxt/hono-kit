@@ -3,7 +3,7 @@ import { Context, Hono } from "hono";
 import { authMiddleware } from "../middleware/auth";
 import { info } from "../utils/auth";
 
-const llm = new Hono();
+export const llm = new Hono();
 
 llm.get('/num', async (c: Context) => {
   const list = await c.env.OPENAI_TOKEN;
@@ -24,7 +24,7 @@ llm.post('/share', authMiddleware, async (c: Context) => {
     userName = 'guest' + generateRandomHex(8);
   }
 
-  const userID = user ? user % list.length : Math.floor(Math.random() * list.length);
+  const userID = (user + 1) ? user % list.length : Math.floor(Math.random() * list.length);
 
   const refreshToken = list[userID];
 
@@ -103,5 +103,3 @@ function generateRandomHex (length: number): string {
   }
   return result;
 }
-
-export { llm }

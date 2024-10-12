@@ -1,7 +1,7 @@
 // routes/ths.ts
 import { Context, Hono } from "hono";
 
-const ths = new Hono();
+export const ths = new Hono();
 
 ths.post('/token', async (c: Context) => {
   const body = await c.req.json();
@@ -19,5 +19,3 @@ ths.post('/token', async (c: Context) => {
   const data = await response.json() as any;
   return c.json({ refresh_token: data.token.data.refresh_token, expired_time: data.token.data.expired_time })
 })
-
-export { ths }

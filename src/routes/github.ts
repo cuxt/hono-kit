@@ -1,7 +1,7 @@
 // routes/github.ts
 import { Context, Hono } from "hono";
 
-const github = new Hono();
+export const github = new Hono();
 
 github.post('/commit', async (c: Context) => {
   const { repo } = await c.req.json();
@@ -24,5 +24,3 @@ github.post('/commit', async (c: Context) => {
     return c.json({ error: err.message }, 500);
   }
 })
-
-export { github };

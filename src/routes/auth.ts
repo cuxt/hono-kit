@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import * as authUtils from '../utils/auth';
 import { authMiddleware } from '../middleware/auth';
 
-const auth = new Hono();
+export const auth = new Hono();
 
 // 注册
 auth.post('/register', async (c) => {
@@ -89,5 +89,3 @@ auth.post('/active', authMiddleware, async (c) => {
     return c.json({ error: error.message }, 500);
   }
 })
-
-export { auth };
