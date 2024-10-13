@@ -7,8 +7,10 @@ import { cloudflare } from './cloudflare';
 import { github } from './github';
 import { kv } from './kv';
 import { llm } from './llm';
+import { maimemo } from './maimemo';
 import { msg } from './msg';
 import { ths } from './ths';
+import { translate } from './translate';
 import { tts } from './tts';
 
 const router = new Hono();
@@ -22,8 +24,10 @@ const routes = [
   { path: '/github', handler: github },
   { path: '/kv', handler: kv },
   { path: '/llm', handler: llm },
+  { path: '/maimemo', handler: maimemo },
   { path: '/msg', handler: msg },
   { path: '/ths', handler: ths },
+  { path: '/translate', handler: translate },
   { path: '/tts', handler: tts },
 ];
 

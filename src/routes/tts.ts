@@ -23,3 +23,11 @@ tts.post('/', async (c) => {
 
   return new Response(response.body);
 })
+
+tts.get('/', async (c) => {
+  const targetUrl = "https://tts.xbxin.com/";
+  const response = await fetch(targetUrl);
+  return new Response(response.body, {
+    headers: response.headers
+  });
+})

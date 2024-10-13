@@ -1,6 +1,6 @@
 {
   "name": "hono-kit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "binxin",
     "email": "admin@xbxin.com"
@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241011.0",
+    "@types/node": "^22.7.5",
     "wrangler": "^3.80.4"
   }
 }
