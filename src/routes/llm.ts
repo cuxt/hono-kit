@@ -1,20 +1,32 @@
 // routes/llm.ts
 import { Context, Hono } from "hono";
 import { authMiddleware } from "../middleware/auth";
-import { info } from "../utils/auth";
+import { info, role } from "../utils/auth";
+import { generateRandomHex } from "../utils/utils";
 
 export const llm = new Hono();
 
 llm.get('/num', async (c: Context) => {
-  const list = await c.env.OPENAI_TOKEN;
+  const token = c.req.header('Authorization')?.split(' ')[1] || '';
+  const userRole = await role(c, token);
+
+  const tokens = JSON.parse(await c.env.OPENAI_TOKEN);
+
+  const defaultTokens = tokens['default'];
+  const adminTokens = tokens['admin'];
+  const list = userRole === 1
+    ? [...adminTokens, ...defaultTokens]
+    : defaultTokens;
+
   return c.json(list.length);
 })
 
 llm.post('/share', authMiddleware, async (c: Context) => {
   const token = c.req.header('Authorization')?.split(' ')[1] || '';
   const { user } = await c.req.json();
-  const list = await c.env.OPENAI_TOKEN;
-  const baseurl = 'https://chat.xbxin.com/auth/login_share?token=';
+  const tokens = JSON.parse(await c.env.OPENAI_TOKEN);
+  const defaultTokens = tokens['default'];
+  const adminTokens = tokens['admin'];
 
   const userInfo = await info(c, token);
   const userRole = userInfo.role;
@@ -24,6 +36,10 @@ llm.post('/share', authMiddleware, async (c: Context) => {
     userName = 'guest' + generateRandomHex(8);
   }
 
+  const list = userRole === 'admin'
+    ? [...adminTokens, ...defaultTokens]
+    : defaultTokens; const baseurl = 'https://chat.xbxin.com/auth/login_share?token=';
+  console.log(list)
   const userID = (user + 1) ? user % list.length : Math.floor(Math.random() * list.length);
 
   const refreshToken = list[userID];
@@ -92,14 +108,4 @@ async function getAccessToken (refreshToken: string) {
   } else {
     throw new Error('Failed to get access token');
   }
-}
-
-function generateRandomHex (length: number): string {
-  let result = '';
-  const characters = '0123456789abcdef';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
 }

@@ -3,7 +3,7 @@
 // Cloudflare
 // https://developers.cloudflare.com/workers-ai/models/
 
-const MODELS = [
+export const MODELS = [
   {
     id: '@cf/openai/whisper-tiny-en',
     name: 'whisper-tiny-en',
@@ -323,5 +323,3 @@ const MODELS = [
     type: 'summary'
   },
 ];
-
-export { MODELS };

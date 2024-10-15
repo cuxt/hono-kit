@@ -1,7 +1,7 @@
 // utils/msg.ts
 
 // 企业微信
-async function corp (from: string, title: string, desc: string, content: string) {
+export async function corp (from: string, title: string, desc: string, content: string) {
   const msg = {
     msgtype: 'text',
     text: {
@@ -31,5 +31,3 @@ async function corp (from: string, title: string, desc: string, content: string)
     throw new Error(`Error sending message: ${error.message}`);
   }
 };
-
-export { corp };

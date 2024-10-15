@@ -73,6 +73,10 @@ export async function info (c: Context, token: string) {
 }
 
 export async function role (c: Context, token: string) {
+  if (!token) {
+    return 4;
+  }
+  
   const stmt = await c.env.DB.prepare(`SELECT role FROM DEV_USERS WHERE access_token = ?`);
   const result = await stmt.bind(token).first();
 
