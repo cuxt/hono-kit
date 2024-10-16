@@ -261,3 +261,41 @@ translate.post('/google', async (c: Context) => {
     return c.json({ error: error.message }, { status: 500 });
   }
 })
+
+translate.post('/deepl', async (c: Context) => {
+  const { text, source, target } = await c.req.json();
+  const key = await c.env.DEEPL_KEY;
+  const url = `https://deeplx.missuo.ru/translate?key=${key}`;
+
+  const payload = {
+    text: text,
+    source_lang: source || 'auto',
+    target_lang: target || 'zh',
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json() as {
+      alternatives: string[],
+      data: string,
+      source_lang: string,
+      target_lang: string
+    };
+    return c.json({
+      targetText: result.data,
+      sourceText: text,
+      target: result.target_lang,
+      source: result.source_lang,
+      alternatives: result.alternatives
+    });
+  } catch (error: any) {
+    return c.json({ error: error.message }, { status: 500 });
+  }
+})

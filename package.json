@@ -1,6 +1,6 @@
 {
   "name": "hono-kit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "binxin",
     "email": "admin@xbxin.com"
@@ -11,7 +11,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
-    "hono": "^4.6.4"
+    "hono": "^4.6.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241011.0",
