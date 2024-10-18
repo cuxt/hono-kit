@@ -1,6 +1,5 @@
 // routes/llm.ts
 import { Context, Hono } from "hono";
-import { authMiddleware } from "../middleware/auth";
 import { info, role } from "../utils/auth";
 import { generateRandomHex } from "../utils/utils";
 
@@ -21,7 +20,7 @@ llm.get('/num', async (c: Context) => {
   return c.json(list.length);
 })
 
-llm.post('/share', authMiddleware, async (c: Context) => {
+llm.post('/share', async (c: Context) => {
   const token = c.req.header('Authorization')?.split(' ')[1] || '';
   const { user } = await c.req.json();
   const tokens = JSON.parse(await c.env.OPENAI_TOKEN);
@@ -38,8 +37,8 @@ llm.post('/share', authMiddleware, async (c: Context) => {
 
   const list = userRole === 'admin'
     ? [...adminTokens, ...defaultTokens]
-    : defaultTokens; const baseurl = 'https://chat.xbxin.com/auth/login_share?token=';
-  console.log(list)
+    : defaultTokens;
+  const baseurl = 'https://chat.xbxin.com/auth/login_share?token=';
   const userID = (user + 1) ? user % list.length : Math.floor(Math.random() * list.length);
 
   const refreshToken = list[userID];
