@@ -20,16 +20,13 @@ export async function makeMd5 (str: string): Promise<string> {
   return hashHex;
 }
 
-// sha256哈希函数
-export async function sha256 (message: string | Buffer, secret: string | Buffer = "", encoding?: BinaryToTextEncoding) {
-  const hmac = crypto.createHmac("sha256", secret);
+export async function hmac (message: string | Buffer, secret: string | Buffer = "", encoding?: BinaryToTextEncoding, algorithm = 'sha256') {
+  const hmac = crypto.createHmac(algorithm, secret);
 
   // 如果 message 是 string 或 Buffer，直接处理
   if (typeof message === 'string' || Buffer.isBuffer(message)) {
     const digest = hmac.update(message).digest();
-    return encoding ? digest.toString(encoding) : digest; // 根据 encoding 是否传入返回不同格式
-  } else {
-    throw new Error("Invalid message type, expected string or Buffer");
+    return encoding ? digest.toString(encoding) : digest; // 根据 encoding 是否传入返回不同
   }
 }
 

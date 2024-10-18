@@ -1,12 +1,12 @@
 import { Context, Hono } from "hono";
-import { getHash, makeMd5, sha256 } from "../utils/utils";
+import { getHash, makeMd5, hmac } from "../utils/utils";
 import { getDate } from "../utils/date";
 
 export const translate = new Hono();
 
 translate.post('/tencent', async (c: Context) => {
-  const SECRET_ID = await c.env.TENCENT_SECRET_ID;
-  const SECRET_KEY = await c.env.TENCENT_SECRET_KEY;
+  const ACCESS_ID = await c.env.TENCENT_ACCESS_ID;
+  const ACCESS_KEY = await c.env.TENCENT_ACCESS_KEY;
   const { text, source, target } = await c.req.json();
 
   try {
@@ -67,10 +67,10 @@ translate.post('/tencent', async (c: Context) => {
     console.log(stringToSign);
 
     // ************* 步骤 3：计算签名 *************
-    const kDate = await sha256(date, "TC3" + SECRET_KEY);
-    const kService = await sha256(service, kDate);
-    const kSigning = await sha256("tc3_request", kService);
-    const signature = await sha256(stringToSign, kSigning, "hex");
+    const kDate = await hmac(date, "TC3" + ACCESS_KEY);
+    const kService = await hmac(service, kDate);
+    const kSigning = await hmac("tc3_request", kService);
+    const signature = await hmac(stringToSign, kSigning, "hex");
 
     console.log('kDate:', kDate);
     console.log('kService:', kService);
@@ -78,7 +78,7 @@ translate.post('/tencent', async (c: Context) => {
     console.log('signature:', signature);
 
     // ************* 步骤 4：拼接 Authorization *************
-    const authorization = `${algorithm} Credential=${SECRET_ID}/${credentialScope}, ` +
+    const authorization = `${algorithm} Credential=${ACCESS_ID}/${credentialScope}, ` +
       `SignedHeaders=${signedHeaders}, Signature=${signature}`;
 
     console.log("Authorization: ", authorization);
