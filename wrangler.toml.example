@@ -1,0 +1,106 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "hono-kit"
+main = "src/index.ts"
+compatibility_date = "2024-10-23"
+
+compatibility_flags = ["nodejs_compat"]
+
+routes = [{ pattern = "api.xbxin.com", custom_domain = true }]
+workers_dev = true
+placement = { mode = "smart" }
+[observability]
+enabled = true
+
+[[kv_namespaces]]
+id = "xxx"
+binding = "api"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "api"
+database_id = "xxx"
+
+[ai]
+binding = "AI"
+
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "xxx"
+
+[vars]
+# API
+ROOT_TOKEN = "xxx"
+
+# OpenAI
+OPENAI_TOKEN = """
+{
+  "admin":[
+    "xxx"
+  ],
+  "default":[
+    "xxx",
+    "xxx",
+    "xxx"
+  ]
+}
+"""
+
+# 墨墨
+MAIMEMO = 'xxx'
+
+# 腾讯
+TENCENT_ID = 'xxx'
+TENCENT_ACCESS_ID = 'xxx'
+TENCENT_ACCESS_KEY = 'xxx'
+# 企业微信
+CORP_ADMIN = "xxx"
+
+# 小牛翻译
+NIUTRANS_KEY = 'xxx'
+
+# 火山引擎
+VOLC_ACCESS_ID = 'xxx'
+VOLC_SECRET_KEY = 'xxx=='
+
+# 百度
+BAIDU_TRANS = [
+  '{"appid": "xxx", "secret": "xxx"}'
+]
+
+# Deepl
+DEEPL_KEY = 'xxx='
+
+# 阿里
+ALIYUN_ID = 'xxx'
+ALIYUN_ACCESS_ID = 'xxx'
+ALIYUN_ACCESS_KEY = 'xxx'
+# 企业微信
+WX_BOT_TOKEN = "xxx"
+WX_BOT_EncodingAESKey = "xxx"
+# 企业ID
+CORPD = "xxx"
+
+# GitHub
+GITHUB_TOKEN = 'xxx'
+ACCESS_TOKEN = 'xxx'
+BOND_KET_ID = 'xxx'
+
+# Cloudflare
+CLOUDFLARE_ACCOUNT_ID = "xxx"
+CLOUDFLARE_API_TOKEN = "xxx"
+GRAPHQL_API_TOKEN = "xxx"
+
+# 123 云盘
+OTT_ID = 'xxx'
+OTT_SECRET = 'xxx'
+
+# TG
+TG_BOT = 'xxx'
+
+# 同花顺
+THS_USERS = [
+  '{"username":"xxx","password":"xxx"}'
+]
+
+# 雨云
+RAINYUN_API = 'xxx'
