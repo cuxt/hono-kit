@@ -17,5 +17,8 @@ ths.post('/token', async (c: Context) => {
   })
 
   const data = await response.json() as any;
+  if (data.hasOwnProperty('error')) {
+    return c.json({ error: data.error }, 400)
+  }
   return c.json({ refresh_token: data.token.data.refresh_token, expired_time: data.token.data.expired_time })
 })

@@ -5,7 +5,7 @@ import { hmac } from "../utils/utils";
 
 export const msg = new Hono();
 
-msg.post('/:user/:channel', async (c) => {
+msg.post('/:user/:channel', async (c:Context) => {
   const { user, channel } = c.req.param();
 
   switch (channel.toLowerCase()) {
