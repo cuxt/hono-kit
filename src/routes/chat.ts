@@ -4,7 +4,7 @@ import { MODELS } from '../utils/models';
 
 export const chat = new Hono()
 
-chat.post('/models', async (c) => {
+chat.post('/models', async (c: Context) => {
   const { url, apikey } = await c.req.json();
   const newUrl = url.replace(/\/$/, '') + '/v1/models';
   const headers = {

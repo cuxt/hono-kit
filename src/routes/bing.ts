@@ -1,9 +1,9 @@
 // routes/bing.ts
-import { Hono } from 'hono';
+import { Context, Hono } from 'hono';
 
 export const bing = new Hono();
 
-bing.get('/img', async (c) => {
+bing.get('/img', async (c: Context) => {
   return c.json(await dailyImg());
 });
 

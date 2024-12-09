@@ -1,12 +1,12 @@
 // routes/auth.ts
-import { Hono } from 'hono';
+import { Context, Hono } from 'hono';
 import * as authUtils from '../utils/auth';
 import { authMiddleware } from '../middleware/auth';
 
 export const auth = new Hono();
 
 // 注册
-auth.post('/register', async (c) => {
+auth.post('/register', async (c: Context) => {
   const { username, email, password } = await c.req.json();
   try {
     const token = await authUtils.register(c, username, email, password);
@@ -17,7 +17,7 @@ auth.post('/register', async (c) => {
 });
 
 // 登录
-auth.post('/login', async (c) => {
+auth.post('/login', async (c: Context) => {
   const { username, password } = await c.req.json();
 
   try {
@@ -29,7 +29,7 @@ auth.post('/login', async (c) => {
 });
 
 // 获取用户信息
-auth.get('/info', authMiddleware, async (c) => {
+auth.get('/info', authMiddleware, async (c: Context) => {
   const token = c.req.header('Authorization')?.split(' ')[1] || '';
 
   try {
@@ -54,7 +54,7 @@ auth.get('/info', authMiddleware, async (c) => {
 });
 
 // 修改密码
-auth.post('/changePassword', authMiddleware, async (c) => {
+auth.post('/changePassword', authMiddleware, async (c: Context) => {
   const token = c.req.header('Authorization')?.split(' ')[1] || '';
   const { oldPassword, newPassword } = await c.req.json();
 
@@ -66,7 +66,7 @@ auth.post('/changePassword', authMiddleware, async (c) => {
   }
 });
 
-auth.get('/users', authMiddleware, async (c) => {
+auth.get('/users', authMiddleware, async (c: Context) => {
   const token = c.req.header('Authorization')?.split(' ')[1] || '';
 
   try {
@@ -78,7 +78,7 @@ auth.get('/users', authMiddleware, async (c) => {
 })
 
 // 切换用户激活信息
-auth.post('/active', authMiddleware, async (c) => {
+auth.post('/active', authMiddleware, async (c: Context) => {
   const token = c.req.header('Authorization')?.split(' ')[1] || '';
   const { id } = await c.req.json();
 

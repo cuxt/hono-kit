@@ -1,9 +1,9 @@
 // routes/tts.ts
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 
 export const tts = new Hono();
 
-tts.post('/', async (c) => {
+tts.post('/', async (c: Context) => {
   const body = await c.req.json();
   const targetUrl = "https://tts.xbxin.com/v1/audio/speech";
 
@@ -24,7 +24,7 @@ tts.post('/', async (c) => {
   return new Response(response.body);
 })
 
-tts.get('/', async (c) => {
+tts.get('/', async (c: Context) => {
   const targetUrl = "https://tts.xbxin.com/";
   const response = await fetch(targetUrl);
   return new Response(response.body, {

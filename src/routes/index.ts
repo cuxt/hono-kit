@@ -14,7 +14,6 @@ import { msg } from './msg';
 import { ths } from './ths';
 import { translate } from './translate';
 import { tts } from './tts';
-import { ws } from './ws';
 
 const router = new Hono();
 
@@ -33,7 +32,6 @@ const routes = [
   { path: '/ths', handler: ths },
   { path: '/translate', handler: translate },
   { path: '/tts', handler: tts },
-  { path: '/ws', handler: ws },
 ];
 
 routes.forEach(route => {

@@ -3,7 +3,7 @@ import { Context, Hono } from 'hono'
 
 export const bilibili = new Hono()
 
-bilibili.post('/subtitle', async (c) => {
+bilibili.post('/subtitle', async (c: Context) => {
   try {
     const subtitle = await getSubtitle(c) as any;
     return c.json(subtitle)
